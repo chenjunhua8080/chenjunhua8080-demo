@@ -1,0 +1,5 @@
+server:
+  shutdown: graceful #设置开启优雅关机
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s #设置优雅关机的超时时间(会立即停止和平常关机一样)
