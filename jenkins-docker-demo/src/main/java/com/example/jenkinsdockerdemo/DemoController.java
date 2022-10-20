@@ -39,7 +39,10 @@ public class DemoController {
         new Thread(() -> {
             try {
                 log.info("准备 sleep {}", num);
-                TimeUnit.SECONDS.sleep(num);
+                for (int i = 0; i < num; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    log.info("{} sleep {}", Thread.currentThread().getName(), i);
+                }
                 log.info("完成 sleep");
             } catch (InterruptedException e) {
                 e.printStackTrace();
