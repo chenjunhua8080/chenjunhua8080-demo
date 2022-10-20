@@ -32,22 +32,41 @@ public class DemoController {
     }
 
     /**
-     * 测试优雅关机
+     * 测试优雅关机1 - 子线程(经过测试会立即关机)
      */
     @GetMapping("test3/{num}")
-    public String sleep(@PathVariable Integer num) {
+    public String test3(@PathVariable Integer num) {
         new Thread(() -> {
             try {
-                log.info("准备 sleep {}", num);
+                log.info("{} 准备 sleep {}", Thread.currentThread().getName(), num);
                 for (int i = 0; i < num; i++) {
                     TimeUnit.SECONDS.sleep(1);
                     log.info("{} sleep {}", Thread.currentThread().getName(), i);
                 }
-                log.info("完成 sleep");
+                log.info("{} 完成 sleep", Thread.currentThread().getName());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
+        return "ok";
+    }
+
+
+    /**
+     * 测试优雅关机2 - 主线程
+     */
+    @GetMapping("test4/{num}")
+    public String test4(@PathVariable Integer num) {
+        try {
+            log.info("{} 准备 sleep {}", Thread.currentThread().getName(), num);
+            for (int i = 0; i < num; i++) {
+                TimeUnit.SECONDS.sleep(1);
+                log.info("{} sleep {}", Thread.currentThread().getName(), i);
+            }
+            log.info("{} 完成 sleep", Thread.currentThread().getName());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return "ok";
     }
 
