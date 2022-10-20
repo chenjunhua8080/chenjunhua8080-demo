@@ -22,12 +22,18 @@ public class DemoController {
         return "test1";
     }
 
+    /**
+     * 测试本地redis
+     */
     @GetMapping("test2")
     public String test2() {
         redisTemplate.opsForValue().set("test2", String.valueOf((int) (Math.random() * 100)));
         return redisTemplate.opsForValue().get("test2");
     }
 
+    /**
+     * 测试优雅关机
+     */
     @GetMapping("test3/{num}")
     public String sleep(@PathVariable Integer num) {
         new Thread(() -> {
