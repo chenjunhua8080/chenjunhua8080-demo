@@ -9,9 +9,9 @@ pipeline {
     maven 'v3.8.6'
 //     jdk 'jdk8'
   }
-  environment {
+//   environment {
 //     DOCKER_CERT_PATH = credentials('id-for-a-docker-cred')
-  }
+//   }
   stages {
     stage('maven') {
       steps {
