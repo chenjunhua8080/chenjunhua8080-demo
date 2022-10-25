@@ -1,13 +1,8 @@
 pipeline {
   agent any
   tools {
-    // a bit ugly because there is no `@Symbol` annotation for the DockerTool
-    // see the discussion about this in PR 77 and PR 52:
-    // https://github.com/jenkinsci/docker-commons-plugin/pull/77#discussion_r280910822
-    // https://github.com/jenkinsci/docker-commons-plugin/pull/52
     'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'jenkins-docker'
     maven 'v3.8.6'
-//     jdk 'jdk8'
   }
 //   environment {
 //     DOCKER_CERT_PATH = credentials('id-for-a-docker-cred')
@@ -15,12 +10,25 @@ pipeline {
   stages {
     stage('maven') {
       steps {
-        sh "mvn -v"
+         sh 'mvn -v'
+         sh 'mvn clean package -Dmaven.test.skip=true'
       }
     }
     stage('docker') {
       steps {
-        sh "docker -v"
+        sh 'docker -v'
+      }
+    }
+    stage('docker2') {
+      steps {
+        script{
+          docker.withRegistry('https://hub.docker.com','dckr_pat_6PgKqGNgiW0XH273tiXnz0or8Dw'){
+            def customImage = docker.build("my-image:${env.BUILD_ID}")
+
+            /* Push the container to the custom Registry */
+            customImage.push()
+          }
+        }
       }
     }
   }
