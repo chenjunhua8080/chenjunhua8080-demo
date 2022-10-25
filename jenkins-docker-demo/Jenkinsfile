@@ -16,7 +16,7 @@ pipeline {
     }
     stage('docker') {
       steps {
-        sh 'docker -v'
+        sh 'docker version'
       }
     }
     stage('docker2') {
