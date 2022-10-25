@@ -11,6 +11,8 @@ pipeline {
     stage('maven') {
       steps {
          sh 'mvn -v'
+         sh 'cd jenkins-docker-demo'
+         sh 'pwd'
          sh 'mvn clean package -Dmaven.test.skip=true'
       }
     }
