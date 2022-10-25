@@ -22,7 +22,7 @@ pipeline {
     stage('docker2') {
       steps {
         script{
-          docker.withRegistry('https://hub.docker.com','dckr_pat_6PgKqGNgiW0XH273tiXnz0or8Dw'){
+          docker.withRegistry('https://hub.docker.com','hub.docker'){
             def customImage = docker.build("my-image:${env.BUILD_ID}")
 
             /* Push the container to the custom Registry */
