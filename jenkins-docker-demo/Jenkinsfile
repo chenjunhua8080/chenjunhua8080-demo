@@ -22,7 +22,7 @@ pipeline {
     stage('docker2') {
       steps {
         script{
-          docker.withRegistry('',hub.docker'){
+          docker.withRegistry('','hub.docker'){
             def customImage = docker.build("1109551489/my-image:${env.BUILD_ID}","./jenkins-docker-demo")
 
             /* Push the container to the custom Registry */
