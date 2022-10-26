@@ -10,10 +10,12 @@ pipeline {
   stages {
     stage('maven') {
       steps {
-         sh 'mvn -v'
-         sh 'cd jenkins-docker-demo'
-         sh 'pwd'
-         sh 'mvn clean package -Dmaven.test.skip=true'
+         sh '''
+                mvn -v
+                cd jenkins-docker-demo
+                pwd
+                mvn clean package -Dmaven.test.skip=true
+            '''
       }
     }
     stage('docker') {
@@ -30,6 +32,17 @@ pipeline {
             /* Push the container to the custom Registry */
             customImage.push()
           }
+        }
+      }
+    }
+    stage('ssh') {
+      steps {
+        // 启动 ssh-agent 并将你的的 SSH 私钥凭据添加到其中
+        sshagent(credentials: ["ssh-aws"]) {
+            // 在这里就可以正常进行需要 SSH 连接才能做的操作了...
+             sh '''
+                     docker ps
+                '''
         }
       }
     }
