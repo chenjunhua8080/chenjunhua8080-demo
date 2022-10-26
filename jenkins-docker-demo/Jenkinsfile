@@ -4,45 +4,52 @@ pipeline {
     'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker-17.05.0-ce'
     maven 'v3.8.6'
   }
-//   environment {
-//     DOCKER_CERT_PATH = credentials('id-for-a-docker-cred')
-//   }
   stages {
-//     stage('maven') {
-//       steps {
-//          sh '''
-//                 mvn -v
-//                 cd jenkins-docker-demo
-//                 pwd
-//                 mvn clean package -Dmaven.test.skip=true
-//             '''
-//       }
-//     }
-//     stage('docker') {
-//       steps {
-//         sh 'docker version'
-//       }
-//     }
-//     stage('docker2') {
-//       steps {
-//         script{
-//           docker.withRegistry('','hub.docker'){
-//             def customImage = docker.build("1109551489/my-image:${env.BUILD_ID}","./jenkins-docker-demo")
-//
-//             /* Push the container to the custom Registry */
-//             customImage.push()
-//           }
-//         }
-//       }
-//     }
+    stage('maven') {
+      steps {
+         sh '''
+                mvn -v
+                cd jenkins-docker-demo
+                pwd
+                mvn clean package -Dmaven.test.skip=true
+            '''
+      }
+    }
+    stage('docker') {
+      steps {
+        sh 'docker version'
+      }
+    }
+    stage('docker2') {
+      steps {
+        script{
+          docker.withRegistry('','hub.docker'){
+            def customImage = docker.build("1109551489/my-image:${env.BUILD_ID}","./jenkins-docker-demo")
+
+            /* Push the container to the custom Registry */
+            customImage.push()
+          }
+        }
+      }
+    }
     stage('ssh') {
       steps {
-        // 启动 ssh-agent 并将你的的 SSH 私钥凭据添加到其中
-        sshagent(credentials: ["ssh-aws"]) {
-            // 在这里就可以正常进行需要 SSH 连接才能做的操作了...
-             sh '''
-                     docker ps
-                '''
+        script {
+          def remote = [:]
+          remote.name = 'aws'
+          remote.host = '52.0.104.183'
+          remote.user = 'root'
+          remote.port = 22
+          remote.password = 'Aa@cjh2022'
+          remote.allowAnyHosts = true
+          sshCommand remote: remote, command: """
+          pwd
+          docker ps
+          docker stop jenkins-docker-demo
+          docker rm -f jenkins-docker-demo
+          docker run -d --name jenkins-docker-demo -p 8080:8080 1109551489/my-image:${env.BUILD_ID}
+          docker ps
+          """
         }
       }
     }
