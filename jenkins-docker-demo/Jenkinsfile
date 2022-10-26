@@ -7,34 +7,34 @@ pipeline {
 //   environment {
 //     DOCKER_CERT_PATH = credentials('id-for-a-docker-cred')
 //   }
-  stages {
-    stage('maven') {
-      steps {
-         sh '''
-                mvn -v
-                cd jenkins-docker-demo
-                pwd
-                mvn clean package -Dmaven.test.skip=true
-            '''
-      }
-    }
-    stage('docker') {
-      steps {
-        sh 'docker version'
-      }
-    }
-    stage('docker2') {
-      steps {
-        script{
-          docker.withRegistry('','hub.docker'){
-            def customImage = docker.build("1109551489/my-image:${env.BUILD_ID}","./jenkins-docker-demo")
-
-            /* Push the container to the custom Registry */
-            customImage.push()
-          }
-        }
-      }
-    }
+//   stages {
+//     stage('maven') {
+//       steps {
+//          sh '''
+//                 mvn -v
+//                 cd jenkins-docker-demo
+//                 pwd
+//                 mvn clean package -Dmaven.test.skip=true
+//             '''
+//       }
+//     }
+//     stage('docker') {
+//       steps {
+//         sh 'docker version'
+//       }
+//     }
+//     stage('docker2') {
+//       steps {
+//         script{
+//           docker.withRegistry('','hub.docker'){
+//             def customImage = docker.build("1109551489/my-image:${env.BUILD_ID}","./jenkins-docker-demo")
+//
+//             /* Push the container to the custom Registry */
+//             customImage.push()
+//           }
+//         }
+//       }
+//     }
     stage('ssh') {
       steps {
         // 启动 ssh-agent 并将你的的 SSH 私钥凭据添加到其中
