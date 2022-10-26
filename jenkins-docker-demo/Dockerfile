@@ -9,4 +9,6 @@ COPY service_start.sh /service_start.sh
 RUN chmod +x service_start.sh ;\
     mkdir -p /root/signum
 
+EXPOSE 8080
+
 CMD ["/service_start.sh"]
