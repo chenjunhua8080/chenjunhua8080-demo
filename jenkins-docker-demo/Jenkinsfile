@@ -47,7 +47,7 @@ pipeline {
           docker ps
           docker stop jenkins-docker-demo
           docker rm -f jenkins-docker-demo
-          docker run -d --name jenkins-docker-demo -p 8080:8080 1109551489/my-image:${env.BUILD_ID}
+          docker run -d --name jenkins-docker-demo -p 8080:80 1109551489/my-image:${env.BUILD_ID}
           docker ps
           """
         }
